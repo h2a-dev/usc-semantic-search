@@ -58,17 +58,14 @@ class USCDownloader:
                 "Chrome/120.0.0.0 Safari/537.36"
             ),
             "Accept": (
-                "text/html,application/xhtml+xml,application/xml;"
-                "q=0.9,image/webp,*/*;q=0.8"
+                "text/html,application/xhtml+xml,application/xml;" "q=0.9,image/webp,*/*;q=0.8"
             ),
             "Accept-Language": "en-US,en;q=0.5",
             "Accept-Encoding": "gzip, deflate, br",
             "Connection": "keep-alive",
             "Upgrade-Insecure-Requests": "1",
         }
-        self.session = httpx.AsyncClient(
-            timeout=60.0, follow_redirects=True, headers=headers
-        )
+        self.session = httpx.AsyncClient(timeout=60.0, follow_redirects=True, headers=headers)
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
@@ -131,9 +128,7 @@ class USCDownloader:
             with open(self.catalog_file, "w") as f:
                 json.dump(catalog, f, indent=2)
 
-            console.print(
-                f"[green]✓ Found {len(catalog)} USC titles in catalog[/green]"
-            )
+            console.print(f"[green]✓ Found {len(catalog)} USC titles in catalog[/green]")
             return catalog
 
         except Exception as e:
@@ -158,9 +153,7 @@ class USCDownloader:
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=4, max=10),
     )
-    async def download_file(
-        self, url: str, filepath: Path, progress=None, task_id=None
-    ):
+    async def download_file(self, url: str, filepath: Path, progress=None, task_id=None):
         """Download a file with retry logic"""
         # Try with a simpler approach - just get the content
         response = await self.session.get(url)
@@ -169,9 +162,7 @@ class USCDownloader:
         # Check if we got HTML instead of a zip file
         content_type = response.headers.get("content-type", "")
         if "text/html" in content_type:
-            console.print(
-                "[red]Warning: Got HTML response instead of zip file[/red]"
-            )
+            console.print("[red]Warning: Got HTML response instead of zip file[/red]")
             console.print("[dim]Content-Type: " + content_type + "[/dim]")
             console.print(f"[dim]Status: {response.status_code}[/dim]")
             # Check first 200 chars
@@ -208,10 +199,7 @@ class USCDownloader:
 
         # Check if already extracted
         if xml_filepath.exists() and not force:
-            console.print(
-                f"[yellow]Title {title_num} already extracted, "
-                f"skipping[/yellow]"
-            )
+            console.print(f"[yellow]Title {title_num} already extracted, " f"skipping[/yellow]")
             return xml_filepath
 
         # Download zip file if needed
@@ -228,14 +216,10 @@ class USCDownloader:
             try:
                 console.print(f"[cyan]Downloading {zip_filename}...[/cyan]")
                 console.print(f"[dim]URL: {title_info['url']}[/dim]")
-                await self.download_file(
-                    title_info["url"], zip_filepath, progress, task_id
-                )
+                await self.download_file(title_info["url"], zip_filepath, progress, task_id)
                 console.print(f"[green]✓ Downloaded {zip_filename}[/green]")
             except httpx.HTTPError as e:
-                console.print(
-                    f"[red]✗ Failed to download Title {title_num}: {e}[/red]"
-                )
+                console.print(f"[red]✗ Failed to download Title {title_num}: {e}[/red]")
                 if progress and task_id is not None:
                     progress.remove_task(task_id)
                 return None
@@ -245,9 +229,7 @@ class USCDownloader:
             console.print(f"[cyan]Extracting {zip_filename}...[/cyan]")
             with zipfile.ZipFile(zip_filepath, "r") as zip_ref:
                 # Find the XML file in the zip
-                xml_files = [
-                    f for f in zip_ref.namelist() if f.endswith(".xml")
-                ]
+                xml_files = [f for f in zip_ref.namelist() if f.endswith(".xml")]
                 if xml_files:
                     # Extract the first XML file
                     zip_ref.extract(xml_files[0], self.data_dir)
@@ -257,18 +239,14 @@ class USCDownloader:
                     if extracted_path != xml_filepath:
                         extracted_path.rename(xml_filepath)
 
-                    console.print(
-                        f"[green]✓ Extracted Title {title_num}[/green]"
-                    )
+                    console.print(f"[green]✓ Extracted Title {title_num}[/green]")
 
                     # Optionally remove zip file to save space
                     # zip_filepath.unlink()
 
                     return xml_filepath
                 else:
-                    console.print(
-                        f"[red]No XML file found in {zip_filename}[/red]"
-                    )
+                    console.print(f"[red]No XML file found in {zip_filename}[/red]")
                     return None
 
         except Exception as e:
@@ -300,9 +278,7 @@ class USCDownloader:
                 await self.download_file(url, filepath)
                 console.print(f"[green]✓ Downloaded {schema_file}[/green]")
             except Exception as e:
-                console.print(
-                    f"[red]✗ Failed to download {schema_file}: {e}[/red]"
-                )
+                console.print(f"[red]✗ Failed to download {schema_file}: {e}[/red]")
                 return False
 
         return True
@@ -323,9 +299,7 @@ class USCDownloader:
             catalog = self.load_catalog()
 
         if not catalog:
-            console.print(
-                "[red]No catalog available. Cannot download titles.[/red]"
-            )
+            console.print("[red]No catalog available. Cannot download titles.[/red]")
             return []
 
         # Filter titles that exist in catalog
@@ -334,10 +308,7 @@ class USCDownloader:
             if str(title) in catalog:
                 available_titles.append(title)
             else:
-                console.print(
-                    f"[yellow]Warning: Title {title} not found in "
-                    f"catalog[/yellow]"
-                )
+                console.print(f"[yellow]Warning: Title {title} not found in " f"catalog[/yellow]")
 
         if not available_titles:
             console.print("[red]No valid titles to download[/red]")
@@ -359,9 +330,7 @@ class USCDownloader:
                     await asyncio.sleep(1)  # 1 second between downloads
 
                 title_info = catalog[str(title)]
-                result = await self.download_and_extract_title(
-                    title, title_info, progress, force
-                )
+                result = await self.download_and_extract_title(title, title_info, progress, force)
                 if result:
                     downloaded.append(result)
 
@@ -376,23 +345,15 @@ class USCDownloader:
     type=int,
     help="Specific title number(s) to download",
 )
-@click.option(
-    "--all", "download_all", is_flag=True, help="Download all USC titles"
-)
-@click.option(
-    "--sample", is_flag=True, help="Download sample titles (1, 26, 42)"
-)
+@click.option("--all", "download_all", is_flag=True, help="Download all USC titles")
+@click.option("--sample", is_flag=True, help="Download sample titles (1, 26, 42)")
 @click.option(
     "--update-catalog",
     is_flag=True,
     help="Update the download catalog from the website",
 )
-@click.option(
-    "--list-available", is_flag=True, help="List all available titles"
-)
-@click.option(
-    "--force", is_flag=True, help="Force re-download even if files exist"
-)
+@click.option("--list-available", is_flag=True, help="List all available titles")
+@click.option("--force", is_flag=True, help="Force re-download even if files exist")
 @click.option(
     "--data-dir",
     default="./data/xml",
@@ -431,8 +392,7 @@ def main(
                 for title_num in sorted(catalog.keys(), key=int):
                     info = catalog[title_num]
                     console.print(
-                        f"  Title {title_num}: {info['filename']} "
-                        f"(version: {info['version']})"
+                        f"  Title {title_num}: {info['filename']} " f"(version: {info['version']})"
                     )
                 return
 
@@ -442,25 +402,19 @@ def main(
                 if not catalog:
                     catalog = await downloader.fetch_download_catalog()
                 titles = [int(t) for t in catalog.keys()]
-                console.print(
-                    f"[bold]Downloading all {len(titles)} USC titles...[/bold]"
-                )
+                console.print(f"[bold]Downloading all {len(titles)} USC titles...[/bold]")
             elif sample:
                 titles = [1, 26, 42]  # Small, Tax, Public Health
-                console.print(
-                    "[bold]Downloading sample USC titles (1, 26, 42)...[/bold]"
-                )
+                console.print("[bold]Downloading sample USC titles (1, 26, 42)...[/bold]")
             elif title:
                 titles = list(title)
                 console.print(
-                    f"[bold]Downloading USC title(s): "
-                    f"{', '.join(map(str, titles))}[/bold]"
+                    f"[bold]Downloading USC title(s): " f"{', '.join(map(str, titles))}[/bold]"
                 )
             else:
                 titles = [26]  # Default to Title 26 (Tax Code)
                 console.print(
-                    "[bold]No titles specified, downloading "
-                    "Title 26 (Tax Code)[/bold]"
+                    "[bold]No titles specified, downloading " "Title 26 (Tax Code)[/bold]"
                 )
 
             # Download schema files first
@@ -468,9 +422,7 @@ def main(
 
             # Download USC titles
             start_time = time.time()
-            downloaded = await downloader.download_titles(
-                titles, update_catalog=False, force=force
-            )
+            downloaded = await downloader.download_titles(titles, update_catalog=False, force=force)
             elapsed = time.time() - start_time
 
             console.print(
