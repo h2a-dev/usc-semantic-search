@@ -62,7 +62,11 @@ class USCSearchTools:
         self.embedder = embedder
 
     async def search_usc(
-        self, query: str, limit: int = 10, title: Optional[int] = None, rerank: bool = True
+        self,
+        query: str,
+        limit: int = 10,
+        title: Optional[int] = None,
+        rerank: bool = True,
     ) -> List[SearchResult]:
         """
         Semantic search across US Code
@@ -89,7 +93,8 @@ class USCSearchTools:
         # Search database
         search_results = self.database.search(
             query_embedding=query_embedding,
-            limit=limit * 2 if rerank else limit,  # Get more results if reranking
+            # Get more results if reranking
+            limit=limit * 2 if rerank else limit,
             filter_dict=filter_dict,
         )
 
@@ -139,19 +144,31 @@ class USCSearchTools:
                 text = metadata.get("text", text)
 
             # Fix section name - use heading if section_name is empty
-            section_name = metadata.get("section_name", "") or metadata.get("heading", "")
+            section_name = (
+                metadata.get("section_name", "") or metadata.get("heading", "")
+            )
 
             search_result = SearchResult(
                 citation=metadata.get("full_citation", ""),
-                title=f"Title {metadata.get('title_num', '')} - {metadata.get('title_name', '')}",
+                title=(
+                    f"Title {metadata.get('title_num', '')} - "
+                    f"{metadata.get('title_name', '')}"
+                ),
                 section_name=section_name,
-                text=text[:500] + "..." if len(text) > 500 else text,  # Truncate for display
+                text=(
+                    text[:500] + "..." if len(text) > 500 else text
+                ),  # Truncate for display
                 score=result["score"],
                 metadata={
                     "section_id": result["id"],
                     "chapter": metadata.get("chapter_name", ""),
-                    "has_notes": str(metadata.get("has_notes", False)).lower() == "true",
-                    "has_amendments": str(metadata.get("has_amendments", False)).lower() == "true",
+                    "has_notes": (
+                        str(metadata.get("has_notes", False)).lower() == "true"
+                    ),
+                    "has_amendments": (
+                        str(metadata.get("has_amendments", False)).lower()
+                        == "true"
+                    ),
                 },
             )
             results.append(search_result)
@@ -177,7 +194,8 @@ class USCSearchTools:
 
         if not result:
             # Try searching by ID format
-            # Handle formats like "7 USC § 1511." or "26 USC 1001" or "7 USC 2012"
+            # Handle formats like "7 USC § 1511." or
+            # "26 USC 1001" or "7 USC 2012"
             import re
 
             # Normalize the citation first
@@ -213,7 +231,9 @@ class USCSearchTools:
                     else:
                         logger.debug(f"Not found with ID: {section_id}")
             else:
-                logger.warning(f"Could not parse citation format: {normalized}")
+                logger.warning(
+                    f"Could not parse citation format: {normalized}"
+                )
 
         if result:
             metadata = result["metadata"]
@@ -235,7 +255,9 @@ class USCSearchTools:
                     "source_credit": metadata.get("source_credit", ""),
                     "effective_date": metadata.get("effective_date", ""),
                     "has_notes": metadata.get("has_notes", "false") == "true",
-                    "has_amendments": (metadata.get("has_amendments", "false") == "true"),
+                    "has_amendments": (
+                        metadata.get("has_amendments", "false") == "true"
+                    ),
                 },
             )
 
