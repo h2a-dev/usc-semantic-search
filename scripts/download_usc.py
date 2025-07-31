@@ -144,7 +144,7 @@ class USCDownloader:
         # Check if we got HTML instead of a zip file
         content_type = response.headers.get("content-type", "")
         if "text/html" in content_type:
-            console.print(f"[red]Warning: Got HTML response instead of zip file[/red]")
+            console.print("[red]Warning: Got HTML response instead of zip file[/red]")
             console.print("[dim]Content-Type: " + content_type + "[/dim]")
             console.print(f"[dim]Status: {response.status_code}[/dim]")
             # Check first 200 chars

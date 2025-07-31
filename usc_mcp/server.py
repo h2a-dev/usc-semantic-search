@@ -6,19 +6,20 @@ Provides MCP interface for AI agents to search and access US Code.
 
 import os
 import sys
-import logging
 from pathlib import Path
-from typing import List, Optional
 
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from fastmcp import FastMCP
-from dotenv import load_dotenv
+import logging  # noqa: E402
+from typing import List, Optional  # noqa: E402
 
-from usc_mcp.database import ChromaDatabase
-from usc_mcp.embedder import VoyageEmbedder
-from usc_mcp.tools import USCSearchTools
+from fastmcp import FastMCP  # noqa: E402
+from dotenv import load_dotenv  # noqa: E402
+
+from usc_mcp.database import ChromaDatabase  # noqa: E402
+from usc_mcp.embedder import VoyageEmbedder  # noqa: E402
+from usc_mcp.tools import USCSearchTools  # noqa: E402
 
 # Load environment variables
 load_dotenv()

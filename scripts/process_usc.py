@@ -7,22 +7,22 @@ Parses downloaded USC XML files and generates embeddings for semantic search.
 
 import os
 import sys
-import logging
-import asyncio
 from pathlib import Path
-from typing import List
 
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
 
-import click
-from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn
-from dotenv import load_dotenv
+import logging  # noqa: E402
+import asyncio  # noqa: E402
+from typing import List  # noqa: E402
 
-from usc_mcp.parser import USLMParser
-from usc_mcp.embedder import VoyageEmbedder
-from usc_mcp.database import ChromaDatabase
+import click  # noqa: E402
+from rich.console import Console  # noqa: E402
+from rich.progress import Progress, SpinnerColumn, TextColumn  # noqa: E402
+from dotenv import load_dotenv  # noqa: E402
+from usc_mcp.parser import USLMParser  # noqa: E402
+from usc_mcp.embedder import VoyageEmbedder  # noqa: E402
+from usc_mcp.database import ChromaDatabase  # noqa: E402
 
 # Load environment variables
 load_dotenv()
@@ -236,12 +236,12 @@ class USCProcessor:
                 logger.error(f"Error processing {filepath}: {e}", exc_info=True)
 
         # Print summary
-        console.print(f"\n[bold green]Processing complete![/bold green]")
+        console.print("\n[bold green]Processing complete![/bold green]")
         console.print(f"Total sections processed: {total_sections}")
 
         # Show database stats
         stats = self.database.get_stats()
-        console.print(f"\n[bold]Database Statistics:[/bold]")
+        console.print("\n[bold]Database Statistics:[/bold]")
         console.print(f"Total sections: {stats['total_sections']}")
         console.print(f"Unique titles: {stats['unique_titles']}")
         console.print(f"Unique chapters: {stats['unique_chapters']}")
@@ -280,7 +280,7 @@ def main(title, process_all, clear, data_dir, use_context, chunk_strategy):
     processor = USCProcessor(data_dir, use_contextualized=use_context)
 
     # Show configuration
-    console.print(f"\n[bold]Configuration:[/bold]")
+    console.print("\n[bold]Configuration:[/bold]")
     console.print(
         f"Embedding mode: {'Contextualized (voyage-context-3)' if processor.use_contextualized else 'Standard (voyage-law-2)'}"
     )

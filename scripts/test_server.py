@@ -9,9 +9,9 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
 
-from usc_mcp.database import ChromaDatabase
-from usc_mcp.embedder import VoyageEmbedder
-from usc_mcp.tools import USCSearchTools
+from usc_mcp.database import ChromaDatabase  # noqa: E402
+from usc_mcp.embedder import VoyageEmbedder  # noqa: E402
+from usc_mcp.tools import USCSearchTools  # noqa: E402
 
 
 async def test_server():
