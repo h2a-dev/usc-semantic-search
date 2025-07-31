@@ -264,11 +264,13 @@ class USCSearchTools:
                 sections = self.database.browse_hierarchy(title_num=title_num)
                 if sections:
                     title_name = sections[0]["metadata"].get("title_name", "")
-                    items.append({
-                        "number": title_num,
-                        "name": title_name,
-                        "type": "title"
-                    })
+                    items.append(
+                        {
+                            "number": title_num,
+                            "name": title_name,
+                            "type": "title",
+                        }
+                    )
 
             return BrowseResult(level="titles", items=items)
 
