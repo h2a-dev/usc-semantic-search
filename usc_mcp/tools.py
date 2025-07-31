@@ -144,30 +144,22 @@ class USCSearchTools:
                 text = metadata.get("text", text)
 
             # Fix section name - use heading if section_name is empty
-            section_name = (
-                metadata.get("section_name", "") or metadata.get("heading", "")
-            )
+            section_name = metadata.get("section_name", "") or metadata.get("heading", "")
 
             search_result = SearchResult(
                 citation=metadata.get("full_citation", ""),
                 title=(
-                    f"Title {metadata.get('title_num', '')} - "
-                    f"{metadata.get('title_name', '')}"
+                    f"Title {metadata.get('title_num', '')} - " f"{metadata.get('title_name', '')}"
                 ),
                 section_name=section_name,
-                text=(
-                    text[:500] + "..." if len(text) > 500 else text
-                ),  # Truncate for display
+                text=(text[:500] + "..." if len(text) > 500 else text),  # Truncate for display
                 score=result["score"],
                 metadata={
                     "section_id": result["id"],
                     "chapter": metadata.get("chapter_name", ""),
-                    "has_notes": (
-                        str(metadata.get("has_notes", False)).lower() == "true"
-                    ),
+                    "has_notes": (str(metadata.get("has_notes", False)).lower() == "true"),
                     "has_amendments": (
-                        str(metadata.get("has_amendments", False)).lower()
-                        == "true"
+                        str(metadata.get("has_amendments", False)).lower() == "true"
                     ),
                 },
             )
@@ -231,9 +223,7 @@ class USCSearchTools:
                     else:
                         logger.debug(f"Not found with ID: {section_id}")
             else:
-                logger.warning(
-                    f"Could not parse citation format: {normalized}"
-                )
+                logger.warning(f"Could not parse citation format: {normalized}")
 
         if result:
             metadata = result["metadata"]
@@ -244,8 +234,7 @@ class USCSearchTools:
             return CitationResult(
                 citation=metadata.get("full_citation", citation),
                 title=(
-                    f"Title {metadata.get('title_num', '')} - "
-                    f"{metadata.get('title_name', '')}"
+                    f"Title {metadata.get('title_num', '')} - " f"{metadata.get('title_name', '')}"
                 ),
                 section_name=metadata.get("section_name", ""),
                 full_text=full_text,
@@ -255,9 +244,7 @@ class USCSearchTools:
                     "source_credit": metadata.get("source_credit", ""),
                     "effective_date": metadata.get("effective_date", ""),
                     "has_notes": metadata.get("has_notes", "false") == "true",
-                    "has_amendments": (
-                        metadata.get("has_amendments", "false") == "true"
-                    ),
+                    "has_amendments": (metadata.get("has_amendments", "false") == "true"),
                 },
             )
 
@@ -334,9 +321,7 @@ class USCSearchTools:
 
             return BrowseResult(level="sections", items=items)
 
-    async def get_context(
-        self, section_id: str, context_size: int = 2
-    ) -> List[CitationResult]:
+    async def get_context(self, section_id: str, context_size: int = 2) -> List[CitationResult]:
         """
         Get surrounding sections for context
 
@@ -359,9 +344,7 @@ class USCSearchTools:
         if not title_num:
             return []
 
-        sections = self.database.browse_hierarchy(
-            title_num=title_num, chapter_num=chapter_num
-        )
+        sections = self.database.browse_hierarchy(title_num=title_num, chapter_num=chapter_num)
 
         # Find target index
         target_idx = None
