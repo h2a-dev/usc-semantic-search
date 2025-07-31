@@ -381,8 +381,8 @@ class VoyageEmbedder:
 
                 # Process each sub-document
                 for sub_idx, subdoc_chunks in enumerate(sub_documents):
-                    doc_id_base = doc_chunks[0].get('metadata', {}).get(
-                        'document_id', f'doc_{doc_idx}'
+                    doc_id_base = (
+                        doc_chunks[0].get("metadata", {}).get("document_id", f"doc_{doc_idx}")
                     )
                     sub_result = self._process_single_document(
                         subdoc_chunks,
