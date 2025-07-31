@@ -383,6 +383,7 @@ class USLMParser:
     def _chunk_by_chapter(self, sections: List[USCSection], max_chunk_size: int) -> List[List[Dict[str, Any]]]:
         """Group sections by chapter, treating each chapter as a document"""
         from collections import defaultdict
+        import re
         
         # Group sections by chapter
         chapters = defaultdict(list)
@@ -398,10 +399,17 @@ class USLMParser:
             # Sort sections within chapter
             chapter_sections.sort(key=lambda s: s.section_num)
             
-            for section in chapter_sections:
-                # Create chunk for this section
+            for idx, section in enumerate(chapter_sections):
+                # Clean section number for ID generation
+                clean_section_num = re.sub(r'[^\w\s-]', '', section.section_num).strip().replace(' ', '_')
+                if not clean_section_num:
+                    clean_section_num = f"section_{idx}"
+                
+                # Create unique chunk ID
+                chunk_id = f"{section.title_num}-{clean_section_num}-ch{idx}"
+                
                 chunk = {
-                    'id': f"{section.title_num}-{section.section_num}",
+                    'id': chunk_id,
                     'text': section.get_full_text(),
                     'metadata': {
                         **section.get_metadata(),
@@ -419,10 +427,16 @@ class USLMParser:
     
     def _chunk_by_section(self, sections: List[USCSection], max_chunk_size: int) -> List[List[Dict[str, Any]]]:
         """Treat each section as a document with subsections as chunks"""
+        import re
         documents = []
         
-        for section in sections:
-            doc_id = f"{section.title_num}-{section.section_num}"
+        for idx, section in enumerate(sections):
+            # Clean section number for ID generation
+            clean_section_num = re.sub(r'[^\w\s-]', '', section.section_num).strip().replace(' ', '_')
+            if not clean_section_num:
+                clean_section_num = f"section_{idx}"
+            
+            doc_id = f"{section.title_num}-{clean_section_num}"
             doc_chunks = []
             
             # First chunk: section header and main text
@@ -485,6 +499,7 @@ class USLMParser:
         section grouping for large sections
         """
         from collections import defaultdict
+        import re
         
         # First, analyze the data
         chapters = defaultdict(list)
@@ -502,8 +517,13 @@ class USLMParser:
             if chapter_size < max_chunk_size * 10:  # Arbitrary threshold
                 doc_chunks = []
                 for i, section in enumerate(sorted(chapter_sections, key=lambda s: s.section_num)):
+                    # Clean section number for ID generation
+                    clean_section_num = re.sub(r'[^\w\s-]', '', section.section_num).strip().replace(' ', '_')
+                    if not clean_section_num:
+                        clean_section_num = f"section_{i}"
+                    
                     chunk = {
-                        'id': f"{section.title_num}-{section.section_num}",
+                        'id': f"{section.title_num}-{clean_section_num}-hier{i}",
                         'text': section.get_full_text(),
                         'metadata': {
                             **section.get_metadata(),
