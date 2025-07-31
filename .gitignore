@@ -1,0 +1,155 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+.DS_Store
+
+# Testing
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+htmlcov/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Data and Database
+data/db/
+data/xml/
+*.db
+*.sqlite
+*.sqlite3
+chroma.sqlite3
+*.npz
+*.npy
+*.h5
+*.hdf5
+
+# Downloads
+*.zip
+*.tar.gz
+*.xml
+!data/xml/.gitkeep
+!docs/schemaandcss/*.xml
+!docs/schemaandcss/*.xsd
+
+# Logs
+logs/
+*.log
+log.txt
+
+# Environment files with secrets
+.env
+.env.local
+.env.production
+.env.*.local
+
+# MCP specific
+usc_mcp_debug.log
+~/usc_mcp_debug.log
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*~
+*.orig
+
+# Temporary files
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# Documentation build
+docs/_build/
+docs/_static/
+docs/_templates/
+site/
+
+# Package files
+*.whl
+*.deb
+*.rpm
+*.dmg
+*.pkg
+*.msi
+
+# ChromaDB specific
+data_level0.bin
+header.bin
+index_metadata.pickle
+length.bin
+link_lists.bin
+
+# Keep directory structure
+!.gitkeep
+!data/.gitkeep
+!data/db/.gitkeep
+!data/xml/.gitkeep
+!logs/.gitkeep
+!tests/.gitkeep

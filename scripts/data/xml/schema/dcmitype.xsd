@@ -1,0 +1,311 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=8" />
+        <meta http-equiv="pragma" content="no-cache" /><!-- HTTP 1.0 -->
+        <meta http-equiv="cache-control" content="no-cache,must-revalidate" /><!-- HTTP 1.1 -->
+        <meta http-equiv="expires" content="0" />
+        <link rel="shortcut icon" href="/javax.faces.resource/favicon.ico.xhtml?ln=images" /><link type="text/css" rel="stylesheet" href="/javax.faces.resource/cssLayout.css.xhtml?ln=css" /><script type="text/javascript" src="/javax.faces.resource/jsf.js.xhtml?ln=javax.faces"></script><link type="text/css" rel="stylesheet" href="/javax.faces.resource/static.css.xhtml?ln=css" /></head><body style="display:none;"><script type="text/javascript" src="/javax.faces.resource/browserPreferences.js.xhtml?ln=scripts"></script>
+        <div id="body">
+    <noscript>
+        <div style="font-size: 12px; font-family: Arial; background-color: #F0F0FE;">
+            This page is better viewed with a JavaScript enabled browser.
+        </div>
+    </noscript>
+    <div id="header"><a href="/browse.xhtml"><img src="/javax.faces.resource/u4.png.xhtml?ln=images" alt="OLRC home" style="border: none;" /></a>
+    </div>
+            <div style="margin-left: 2px; clear: both;  background-color: rgb(201, 173, 109);"><div id="menu_homeLink">
+        <div style="float:right;             width: 55px; height: 18px; font-family: Arial; margin-top: -20px;             text-align: center; cursor: pointer; background-color: rgb(187, 154, 74);             opacity: .9;             -ms-filter:'progid:DXImageTransform.Microsoft.Alpha(Opacity=90)';             filter: alpha(opacity=90);"><a href="/browse.xhtml" style="text-decoration: none; font-family: 'Calibri'; color: rgb(69, 38, 35); font-size: 15px; font-weight: bold;">
+                    Home</a>
+        </div></div>
+    <div id="menu"><script type="text/javascript" src="/javax.faces.resource/menu.js.xhtml?ln=scripts"></script>
+        <div id="subMenu">
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_SITE_CHANGE_NOTICE" onclick="showHideChildren('item_SITE_CHANGE_NOTICE','false','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_SITE_CHANGE_NOTICE" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_SITE_CHANGE_NOTICE" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    !!! CHANGE NOTICE !!!
+	                </span>
+	            </div><a href="/currency/sitechange.html"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_SEARCH_BROWSE" onclick="showHideChildren('item_SEARCH_BROWSE','false','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_SEARCH_BROWSE" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_SEARCH_BROWSE" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Search &amp; Browse
+	                </span>
+	            </div><a href="/browse.xhtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_CURRENCY1" onclick="showHideChildren('item_CURRENCY1','false','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_CURRENCY1" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_CURRENCY1" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Currency and Updating
+	                </span>
+	            </div><a href="/currency/currency.shtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_CLASSIFICATION_TABLES" onclick="showHideChildren('item_CLASSIFICATION_TABLES','false','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_CLASSIFICATION_TABLES" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_CLASSIFICATION_TABLES" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Classification Tables
+	                </span>
+	            </div><a href="/classification/tables.shtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_POPULAR_NAME_TOOL" onclick="showHideChildren('item_POPULAR_NAME_TOOL','false','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_POPULAR_NAME_TOOL" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_POPULAR_NAME_TOOL" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Popular Name Tool
+	                </span>
+	            </div><a href="/popularnames/popularnames.htm"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_OTHER_TABLES_TOOLS" onclick="showHideChildren('item_OTHER_TABLES_TOOLS','true','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_OTHER_TABLES_TOOLS" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_OTHER_TABLES_TOOLS" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Other OLRC Tables and Tools
+	                </span>
+	            </div><a href="#.xhtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="false"> --> <!-- class="children_item_OTHER_TABLES_TOOLS" -->
+	        <div id="item_CITE_CHECKER" onclick="showHideChildren('item_CITE_CHECKER','false','OTHER_TABLES_TOOLS');" class="child_item_OTHER_TABLES_TOOLS children" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_CITE_CHECKER" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_CITE_CHECKER" class="subitem_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Cite Checker
+	                </span>
+	            </div><a href="/cite.xhtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="false"> --> <!-- class="children_item_OTHER_TABLES_TOOLS" -->
+	        <div id="item_TABLEIII" onclick="showHideChildren('item_TABLEIII','false','OTHER_TABLES_TOOLS');" class="child_item_OTHER_TABLES_TOOLS children" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_TABLEIII" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_TABLEIII" class="subitem_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Table III - Statutes at Large
+	                </span>
+	            </div><a href="/table3/table3years.htm"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="false"> --> <!-- class="children_item_OTHER_TABLES_TOOLS" -->
+	        <div id="item_OTHER_TABLES" onclick="showHideChildren('item_OTHER_TABLES','false','OTHER_TABLES_TOOLS');" class="child_item_OTHER_TABLES_TOOLS children" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_OTHER_TABLES" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_OTHER_TABLES" class="subitem_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Other Tables
+	                </span>
+	            </div><a href="/tables/usctable1.htm"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_UNDERSTANTING" onclick="showHideChildren('item_UNDERSTANTING','true','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_UNDERSTANTING" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_UNDERSTANTING" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Understanding the Code
+	                </span>
+	            </div><a href="#.xhtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="false"> --> <!-- class="children_item_UNDERSTANTING" -->
+	        <div id="item_ABOUT_CODE" onclick="showHideChildren('item_ABOUT_CODE','false','UNDERSTANTING');" class="child_item_UNDERSTANTING children" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_ABOUT_CODE" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_ABOUT_CODE" class="subitem_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    About the Code and Website
+	                </span>
+	            </div><a href="/about_code.xhtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="false"> --> <!-- class="children_item_UNDERSTANTING" -->
+	        <div id="item_ABOUT_CLASSIFICATION" onclick="showHideChildren('item_ABOUT_CLASSIFICATION','false','UNDERSTANTING');" class="child_item_UNDERSTANTING children" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_ABOUT_CLASSIFICATION" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_ABOUT_CLASSIFICATION" class="subitem_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    About Classification
+	                </span>
+	            </div><a href="/about_classification.xhtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="false"> --> <!-- class="children_item_UNDERSTANTING" -->
+	        <div id="item_DETAILED_GUIDE" onclick="showHideChildren('item_DETAILED_GUIDE','false','UNDERSTANTING');" class="child_item_UNDERSTANTING children" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_DETAILED_GUIDE" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_DETAILED_GUIDE" class="subitem_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Detailed Guide to the Code
+	                </span>
+	            </div><a href="/detailed_guide.xhtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="false"> --> <!-- class="children_item_UNDERSTANTING" -->
+	        <div id="item_FAQ" onclick="showHideChildren('item_FAQ','false','UNDERSTANTING');" class="child_item_UNDERSTANTING children" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_FAQ" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_FAQ" class="subitem_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    FAQ and Glossary
+	                </span>
+	            </div><a href="/faq.xhtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_POSITIVE_LAW" onclick="showHideChildren('item_POSITIVE_LAW','false','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_POSITIVE_LAW" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_POSITIVE_LAW" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Positive Law Codification
+	                </span>
+	            </div><a href="/codification/legislation.shtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_EDITORIAL_RECLASSIFICATION" onclick="showHideChildren('item_EDITORIAL_RECLASSIFICATION','false','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_EDITORIAL_RECLASSIFICATION" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_EDITORIAL_RECLASSIFICATION" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Editorial Reclassification
+	                </span>
+	            </div><a href="/editorialreclassification/reclassification.html"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_DOWNLOADS" onclick="showHideChildren('item_DOWNLOADS','false','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_DOWNLOADS" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_DOWNLOADS" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Downloads
+	                </span>
+	            </div><a href="/download/download.shtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="true"> --> <!-- class="children_item_-1" -->
+	        <div id="item_OTHER_RESOURCES" onclick="showHideChildren('item_OTHER_RESOURCES','true','-1');" class="child_item_-1 main_item" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_OTHER_RESOURCES" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_OTHER_RESOURCES" class="item_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    Other Legislative Resources
+	                </span>
+	            </div><a href="#.xhtml"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="false"> --> <!-- class="children_item_OTHER_RESOURCES" -->
+	        <div id="item_CONGRESS_GOV" onclick="showHideChildren('item_CONGRESS_GOV','false','OTHER_RESOURCES');" class="child_item_OTHER_RESOURCES children" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_CONGRESS_GOV" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_CONGRESS_GOV" class="subitem_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    CONGRESS.GOV
+	                </span>
+	            </div><a href="https://congress.gov/"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="false"> --> <!-- class="children_item_OTHER_RESOURCES" -->
+	        <div id="item_GOVINFO" onclick="showHideChildren('item_GOVINFO','false','OTHER_RESOURCES');" class="child_item_OTHER_RESOURCES children" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_GOVINFO" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_GOVINFO" class="subitem_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    govinfo
+	                </span>
+	            </div><a href="https://www.govinfo.gov"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+		<!-- <c:if test="false"> --> <!-- class="children_item_OTHER_RESOURCES" -->
+	        <div id="item_HOLC_STATUTE_COMPILATIONS" onclick="showHideChildren('item_HOLC_STATUTE_COMPILATIONS','false','OTHER_RESOURCES');" class="child_item_OTHER_RESOURCES children" style="position: relative; top: 0px; left: 0px; width: 100%; height: 31px; overflow: visible;">
+	            <span id="item_HOLC_STATUTE_COMPILATIONS" style="width: 100%; height: 31px;"><img src="/javax.faces.resource/u6.png.xhtml?ln=images" style="width: 100%; height: 31px;" />
+	            </span>
+	            <div style="position: absolute; left: 16px; top: 6px; width: 100%; height: 18px; font-family: Arial; text-align: left; word-wrap: break-word; cursor: pointer;">
+	                <span id="text_HOLC_STATUTE_COMPILATIONS" class="subitem_text" style="font-family: 'Calibri'; color: rgb(49, 28, 26); font-size: 15px; font-weight: bold;">
+	                    HOLC Statutory Compilations
+	                </span>
+	            </div><a href="https://www.govinfo.gov/app/collection/comps/"><img src="/javax.faces.resource/transparent.gif.xhtml?ln=images" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 31px; cursor: pointer; border: none;" /></a>
+	        </div>
+        <!-- </c:if> -->
+        <script type="text/javascript"><!--
+           menu_init('');
+        --></script>
+    </div>
+</div>
+                <div id="content" class="page_content">
+                    <div class="page_content_internal"><head><title></title></head><script type="text/javascript" src="/javax.faces.resource/browserPreferences.js.xhtml?ln=scripts"></script>
+        <div id="container">
+            <div id="top">
+            </div>
+            <div id="content"><head>
+                <title>Document not Found</title></head>
+
+            <h1>Document not found </h1>
+            <div style="height: 500px;">
+                <p>
+                    The document you were looking for does not exist. Click <a href="javascript:parent != null ? parent.close() : window.close();">here</a> to close this window, or click <a href="javascript:history.go(-1);">here</a> to go back.
+                </p>
+            </div>
+            </div>
+        </div><span id="resizeWindow" class="debugCode">
+<form id="formResize" name="formResize" method="post" action="/docnotfound.xhtml;jsessionid=459DFE5535843CB5CC5C66745B55937F" enctype="application/x-www-form-urlencoded">
+<input type="hidden" name="formResize" value="formResize" />
+<input id="winTop" type="hidden" name="winTop" value="0" /><input id="left" type="hidden" name="left" value="0" /><input id="width" type="hidden" name="width" value="0" /><input id="height" type="hidden" name="height" value="0" /><input id="submitBtn" type="submit" name="submitBtn" value="change" onclick="jsf.ajax.request(this, event, {execute:'@form', render: '@form', onevent:ajaxMonitoringEvent}); return false;" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="H4sIAAAAAAAAAMVWTWwbRRQeO3bSpE3U/LRKpaYqUlpU2q7jkJ9WoSKGJIpVp7FqE7X0YCbesT3JemeYnbXXlYjgjJCQOAAiiGsP3HrqBYQqhFSpkUBCSCBuXEEcQEhw4c2sk3UcO05PHclP8/dmvvfN9976y99RlDsCDW7gCjZcSS1jGTulFcyjPT9/8/j0W993ofAS6rMYNpdwXjKRRL2yJIhTYpbp8VfnkWqj1WNgz8OvX6KejRw1ZXzSFWj4XkofbGG7aKyub5C8nPtw584XJ51LVhghj4NH2H0bbaEu6EU5tGC0JdC08vaMAs4Tx8izMmc2saXxRvL13f54WjBOhKzdJDUnLWgFS4LqbQhuEGggQLBou+XGRS7RCJZS0HVXEidbwjIhSIZIIGQ4ICQhBK6lqCO9934Y+/Q7/HkXCiVRxKH3iR9ANaIsOF1sDTcjAdQy8EVEBleIuPvk4Y2Ptp+uhFE4hXrzFnacW7hMJBrSbMUU1lgGYNnFuRTqc8DH1GdIdNrfQVksQwTFFr2P1y0y53FeUbwdd5Tth7jOwfWG49p1MMpaEJiRSKdTycUFD8g1no3cRuLULcck6gvI0xejuhy6tRzUL6Smh4Ga6TZ4aJlbxgIpYNeSS/7keIJzq5Zlm8T++8GVu9vzG/Mn1GNVL6MXYqA85go4IlYQuFgGkE6sRDBQa3glWbbgyk/GPvun2wNKJIoqKcb3JBVWc91anpN7k5Fgea/XvU+Jg6rTqyM83vDePtXKDnakfSVx+2YuqWmfbEf7GiXVNBZKCUR0oj5ia8X0sTKVyzr+LbUyItEJQWwYEpGtcVIRKFJh1ERB8ziAeKkdiKTN3Y7v3m+xPLbWsOXWs2UwyLHXGLMItp+eF+/+uP3vH2EUehNFK2qrx0Ma4wWJBhx3HYBLYupDIBwpXKJXr0q9nZpqEFfm1GHaGocUvhqfmJ2cmZi5fn06NzuVn5x62ZxVTF9uF+SqK48QpY9aDaY0ggmk7Fn94q8oJZ3R5+f0+TlFiaTMzi0vJhbaCKnnqELSWaNxXFLmSkcahvXiaDWOXmxIEUkgu6BuOLEKaCtbHzUnio5HmRt7tXumRU5EORT0kXstKvro1/9lftv85cluRQ8F3qC/8cZXIBX1AmnmyIRpZpmS/KKa+vP9R9/+dPLho7Au2RcPuuzVpEzNgbC001fFa3+t7awN+E5jB50a9l7Y/Pgx/fXMjr/3VFDd9aofSOqD3luj5Xce6Dg6v5JEi50raCvc6ltCbCISJuaQ6gFbu+c2FUs/oTepNNTD5daxQ/PwUalZ8BUmRN6u5zsHss8dLvl9ZcBT2oR6WKV2lgUijfjTEYsUZPNktArqKDXP+hX1WmvNqO7yflGozmpnfpXJHCQnfhRy8oLygBjleace7khj0kIJxSaW+Lnl61k0FDNZ3maywFzbbJuaG7ssT7dked//pmcHfThUZRa84KFnnyuEEqHFUpMwvf8B+Oc3gccKAAA=" autocomplete="off" />
+</form></span>
+
+                    </div>
+                </div>
+                <div style="clear: both; width: 0px; height: 0px;">             
+                </div>
+            </div>
+    <div id="footer">
+        <div style="margin-left: 2px; margin-top: 2px; width: 161px; height: 28px; overflow: visible; float: left;">
+            <form target="_blank" action="https://twitter.com/uscode">
+                <input type="image" src="/javax.faces.resource/u35.png.xhtml?ln=images" style="width: 160px; height: 27px;" />
+            </form>
+        </div>
+        <div style="margin-top: 9px; margin-right: 10px; width: 310px; height: 16px; font-family: Arial; float: right; word-wrap: break-word;" id="u34">
+            <div style="text-align: right;">
+                <span class="footer">
+				    14v4      
+                    <a href="/about_office.xhtml">About the Office</a> 
+                          <a href="/privacy_policy.xhtml">Privacy Policy</a>
+                </span>
+            </div>
+        </div>
+    </div>
+        </div><span id="resizeWindow" class="debugCode">
+<form id="formPrefs" name="formPrefs" method="post" action="/static.xhtml" enctype="application/x-www-form-urlencoded">
+<input type="hidden" name="formPrefs" value="formPrefs" />
+<input id="winTop" type="hidden" name="winTop" value="0" /><input id="left" type="hidden" name="left" value="0" /><input id="width" type="hidden" name="width" value="0" /><input id="height" type="hidden" name="height" value="0" /><input id="submitBtn" type="submit" name="submitBtn" value="change value" onclick="jsf.ajax.request(this, event, {execute:'@form', render: '@form'}); return false;" /><input id="refreshBtn" type="submit" name="refreshBtn" value="refresh value" onclick="jsf.ajax.request(this, event, {render: '@form'}); return false;" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="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" autocomplete="off" />
+</form>
+<form id="formStdRef" name="formStdRef" method="post" action="/static.xhtml" enctype="application/x-www-form-urlencoded">
+<input type="hidden" name="formStdRef" value="formStdRef" />
+<input id="first" type="hidden" name="first" value="" /><input id="second" type="hidden" name="second" value="" /><input id="type" type="hidden" name="type" value="" /><input id="url" type="hidden" name="url" value="" /><input id="stdRefBtn" type="submit" name="stdRefBtn" value="open std ref value" onclick="jsf.ajax.request(this, event, {execute:'@form', render: '@form'}); return false;" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="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" autocomplete="off" />
+</form></span></body><script type="text/javascript" src="/javax.faces.resource/frameCheck.js.xhtml?ln=scripts"></script>
+</html>
