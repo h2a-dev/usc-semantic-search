@@ -16,6 +16,7 @@ import voyageai
 from tenacity import retry, stop_after_attempt, wait_exponential
 from tqdm.auto import tqdm
 from dotenv import load_dotenv
+import tiktoken
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -45,7 +46,8 @@ class VoyageEmbedder:
                  rerank_model: str = "rerank-2",
                  batch_size: int = 25,
                  use_contextualized: bool = True,
-                 context_dimension: int = 1024):
+                 context_dimension: int = 1024,
+                 max_context_tokens: int = 30000):
         """
         Initialize VoyageAI embedder
         
@@ -68,6 +70,10 @@ class VoyageEmbedder:
         self.batch_size = batch_size
         self.use_contextualized = use_contextualized
         self.context_dimension = context_dimension
+        self.max_context_tokens = max_context_tokens  # Leave buffer for voyage-context-3's 32k limit
+        
+        # Initialize tokenizer for token counting
+        self.tokenizer = tiktoken.get_encoding("cl100k_base")
         
         # Initialize client
         self.client = voyageai.Client(api_key=self.api_key)
@@ -281,6 +287,42 @@ class VoyageEmbedder:
             
         return results
         
+    def count_tokens(self, text: str) -> int:
+        """Count tokens in text using tiktoken"""
+        return len(self.tokenizer.encode(text))
+    
+    def split_large_document(self, doc_chunks: List[Dict[str, Any]]) -> List[List[Dict[str, Any]]]:
+        """
+        Split a document into smaller sub-documents if it exceeds token limit
+        
+        Args:
+            doc_chunks: List of chunks in a document
+            
+        Returns:
+            List of sub-documents, each within token limit
+        """
+        sub_documents = []
+        current_subdoc = []
+        current_tokens = 0
+        
+        for chunk in doc_chunks:
+            chunk_tokens = self.count_tokens(chunk['text'])
+            
+            # If adding this chunk would exceed limit, start new sub-document
+            if current_subdoc and current_tokens + chunk_tokens > self.max_context_tokens:
+                sub_documents.append(current_subdoc)
+                current_subdoc = [chunk]
+                current_tokens = chunk_tokens
+            else:
+                current_subdoc.append(chunk)
+                current_tokens += chunk_tokens
+        
+        # Add final sub-document
+        if current_subdoc:
+            sub_documents.append(current_subdoc)
+            
+        return sub_documents
+        
     def embed_document_chunks(self, document_chunks: List[List[Dict[str, Any]]], 
                              show_progress: bool = True) -> List[ContextualizedEmbeddingResult]:
         """
@@ -308,13 +350,51 @@ class VoyageEmbedder:
         iterator = tqdm(document_chunks, desc="Processing documents") if show_progress else document_chunks
         
         for doc_idx, doc_chunks in enumerate(iterator):
-            # Extract texts for this document
-            chunk_texts = [chunk['text'] for chunk in doc_chunks]
-            
             # Skip empty documents
-            if not chunk_texts:
+            if not doc_chunks:
                 continue
+            
+            # Check document size and split if necessary
+            doc_text = ' '.join(chunk['text'] for chunk in doc_chunks)
+            doc_tokens = self.count_tokens(doc_text)
+            
+            if doc_tokens > self.max_context_tokens:
+                logger.warning(f"Document {doc_idx} has {doc_tokens} tokens, splitting into sub-documents")
+                sub_documents = self.split_large_document(doc_chunks)
                 
+                # Process each sub-document
+                for sub_idx, subdoc_chunks in enumerate(sub_documents):
+                    sub_result = self._process_single_document(
+                        subdoc_chunks, 
+                        f"{doc_chunks[0].get('metadata', {}).get('document_id', f'doc_{doc_idx}')}_{sub_idx}"
+                    )
+                    if sub_result:
+                        results.append(sub_result)
+                        total_tokens += sub_result.total_tokens
+            else:
+                # Process normally if within limits
+                result = self._process_single_document(
+                    doc_chunks,
+                    doc_chunks[0].get('metadata', {}).get('document_id', f'doc_{doc_idx}')
+                )
+                if result:
+                    results.append(result)
+                    total_tokens += result.total_tokens
+                
+        logger.info(f"Generated contextualized embeddings for {len(results)} documents using {total_tokens} tokens")
+        return results
+    
+    def _process_single_document(self, doc_chunks: List[Dict[str, Any]], doc_id: str) -> Optional[ContextualizedEmbeddingResult]:
+        """
+        Process a single document's chunks into contextualized embeddings
+        """
+        # Extract texts for this document
+        chunk_texts = [chunk['text'] for chunk in doc_chunks]
+        
+        if not chunk_texts:
+            return None
+            
+        try:
             # Create contextualized embeddings for this document
             embeddings_obj = self.contextualized_embed(
                 inputs=[chunk_texts],  # Single document with multiple chunks
@@ -324,7 +404,6 @@ class VoyageEmbedder:
             # Process results
             if embeddings_obj.results:
                 result = embeddings_obj.results[0]
-                doc_id = doc_chunks[0].get('metadata', {}).get('document_id', f'doc_{doc_idx}')
                 
                 # Create embedding results for each chunk
                 chunk_embeddings = []
@@ -333,7 +412,7 @@ class VoyageEmbedder:
                         chunk_id=chunk['id'],
                         embedding=embedding,
                         metadata=chunk['metadata'],
-                        token_count=len(chunk['text'].split()) * 2  # Rough estimate
+                        token_count=self.count_tokens(chunk['text'])
                     )
                     chunk_embeddings.append(emb_result)
                 
@@ -341,17 +420,14 @@ class VoyageEmbedder:
                 ctx_result = ContextualizedEmbeddingResult(
                     document_id=doc_id,
                     chunk_embeddings=chunk_embeddings,
-                    total_tokens=embeddings_obj.total_tokens
+                    total_tokens=sum(e.token_count for e in chunk_embeddings)
                 )
-                results.append(ctx_result)
-                total_tokens += embeddings_obj.total_tokens
-                
-            # Rate limiting pause
-            if len(document_chunks) > 1:
-                time.sleep(0.5)
-                
-        logger.info(f"Generated contextualized embeddings for {len(results)} documents using {total_tokens} tokens")
-        return results
+                return ctx_result
+        except Exception as e:
+            logger.error(f"Failed to process document {doc_id}: {e}")
+            return None
+            
+        return None
     
     def estimate_cost(self, num_chunks: int, avg_chunk_size: int = 500) -> Dict[str, float]:
         """
