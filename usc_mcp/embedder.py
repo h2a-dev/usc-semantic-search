@@ -7,7 +7,7 @@ Handles embedding generation using VoyageAI's legal-optimized models.
 import os
 import logging
 import time
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 from dataclasses import dataclass
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
@@ -166,7 +166,7 @@ class VoyageEmbedder:
         logger.info(f"Generated {len(results)} embeddings using {total_tokens} tokens")
         return results
 
-    def embed_query(self, query: str) -> List[float]:
+    def embed_query(self, query: str) -> Any:
         """
         Embed a single query for search
 
@@ -252,7 +252,7 @@ class VoyageEmbedder:
         results = []
         semaphore = asyncio.Semaphore(max_concurrent)
 
-        async def embed_batch(batch):
+        async def embed_batch(batch: List[Dict[str, Any]]) -> List[EmbeddingResult]:
             async with semaphore:
                 # Run synchronous embed in thread pool
                 loop = asyncio.get_event_loop()
@@ -301,7 +301,7 @@ class VoyageEmbedder:
             List of sub-documents, each within token limit
         """
         sub_documents = []
-        current_subdoc = []
+        current_subdoc: List[Dict[str, Any]] = []
         current_tokens = 0
 
         # Use 80% of max tokens to leave buffer for VoyageAI's own overhead
@@ -335,7 +335,7 @@ class VoyageEmbedder:
 
     def embed_document_chunks(
         self, document_chunks: List[List[Dict[str, Any]]], show_progress: bool = True
-    ) -> List[ContextualizedEmbeddingResult]:
+    ) -> Union[List[EmbeddingResult], List[ContextualizedEmbeddingResult]]:
         """
         Embed documents with their chunks using contextualized embeddings
 
@@ -348,13 +348,13 @@ class VoyageEmbedder:
         """
         if not self.use_contextualized:
             # Fallback to standard embeddings if contextualized is disabled
-            all_results = []
+            all_results: List[EmbeddingResult] = []
             for doc_chunks in document_chunks:
-                results = self.embed_chunks(doc_chunks, show_progress=False)
-                all_results.extend(results)
+                chunk_results = self.embed_chunks(doc_chunks, show_progress=False)
+                all_results.extend(chunk_results)
             return all_results
 
-        results = []
+        results: List[ContextualizedEmbeddingResult] = []
         total_tokens = 0
 
         # Process each document
@@ -467,7 +467,7 @@ class VoyageEmbedder:
 
         return None
 
-    def estimate_cost(self, num_chunks: int, avg_chunk_size: int = 500) -> Dict[str, float]:
+    def estimate_cost(self, num_chunks: int, avg_chunk_size: int = 500) -> Dict[str, Any]:
         """
         Estimate embedding costs
 

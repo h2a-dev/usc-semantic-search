@@ -21,7 +21,9 @@ logger = logging.getLogger(__name__)
 class ChromaDatabase:
     """Manages USC sections in ChromaDB for semantic search"""
 
-    def __init__(self, persist_dir: Optional[str] = None, collection_name: str = "usc_sections"):
+    def __init__(
+        self, persist_dir: Optional[str] = None, collection_name: str = "usc_sections"
+    ) -> None:
         """
         Initialize ChromaDB client
 
@@ -37,12 +39,17 @@ class ChromaDatabase:
         self.collection_name = collection_name
 
         # Ensure directory exists
-        Path(self.persist_dir).mkdir(parents=True, exist_ok=True)
+        if self.persist_dir:
+            Path(self.persist_dir).mkdir(parents=True, exist_ok=True)
 
         # Initialize ChromaDB client with persistence
-        self.client = chromadb.PersistentClient(
-            path=self.persist_dir, settings=Settings(anonymized_telemetry=False, allow_reset=True)
-        )
+        if self.persist_dir:
+            self.client = chromadb.PersistentClient(
+                path=self.persist_dir,
+                settings=Settings(anonymized_telemetry=False, allow_reset=True),
+            )
+        else:
+            raise ValueError("persist_dir cannot be None")
 
         # Get or create collection
         self.collection = self._get_or_create_collection()
@@ -57,7 +64,7 @@ class ChromaDatabase:
         except Exception as e:
             logger.warning(f"Could not get collection count: {e}")
 
-    def _get_or_create_collection(self):
+    def _get_or_create_collection(self) -> Any:
         """Get or create the USC sections collection"""
         try:
             # List existing collections
@@ -301,7 +308,7 @@ class ChromaDatabase:
             List of sections matching the hierarchy
         """
         # ChromaDB requires specific operator syntax for multiple conditions
-        where = None
+        where: Optional[Dict[str, Any]] = None
         if title_num and chapter_num:
             where = {
                 "$and": [
@@ -376,7 +383,7 @@ class ChromaDatabase:
                 "embedding_type": "unknown",
             }
 
-    def clear_collection(self):
+    def clear_collection(self) -> None:
         """Clear all data from the collection"""
         try:
             self.client.delete_collection(self.collection_name)
@@ -385,7 +392,7 @@ class ChromaDatabase:
         except Exception as e:
             logger.error(f"Error clearing collection: {e}")
 
-    def export_metadata(self, output_file: str):
+    def export_metadata(self, output_file: str) -> None:
         """Export all metadata to a JSON file for debugging"""
         results = self.collection.get(
             limit=self.collection.count(), include=["metadatas", "documents"]

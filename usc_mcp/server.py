@@ -12,7 +12,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 import logging  # noqa: E402
-from typing import List, Optional  # noqa: E402
+from typing import List, Optional, Any  # noqa: E402
 
 from fastmcp import FastMCP  # noqa: E402
 from dotenv import load_dotenv  # noqa: E402
@@ -35,14 +35,14 @@ logger = logging.getLogger(__name__)
 logger.info(f"USC MCP Server logging to: {log_file}")
 
 # Initialize MCP server
-mcp = FastMCP(name=os.getenv("MCP_SERVER_NAME", "USC Semantic Search"))
+mcp: FastMCP = FastMCP(name=os.getenv("MCP_SERVER_NAME", "USC Semantic Search"))
 
 # Initialize components
 logger.info("Initializing USC MCP components...")
 
-database = None
-embedder = None
-tools = None
+database: Optional[ChromaDatabase] = None
+embedder: Optional[VoyageEmbedder] = None
+tools: Optional[USCSearchTools] = None
 
 try:
     logger.info("Initializing ChromaDB...")
@@ -236,6 +236,9 @@ async def browse_usc(
         - browse_usc(title=26)   # List chapters in Title 26 (Tax Code)
         - browse_usc(title=26, chapter=1)  # List sections in Chapter 1
     """
+    if tools is None:
+        return {"error": "Server not initialized", "level": "error", "items": []}
+
     try:
         # Convert to int if provided
         title_int = int(title) if title is not None else None
@@ -266,6 +269,14 @@ async def get_context(section_id: str, context_size: int = 2) -> List[dict]:
         - get_context("26-280A", context_size=2)    # Home office with context
         - get_context("42-2000e", context_size=3)   # Title VII with context
     """
+    if tools is None:
+        return [
+            {
+                "error": "Server not initialized",
+                "message": "The USC search tools are not available.",
+            }
+        ]
+
     try:
         results = await tools.get_context(section_id, context_size)
         return [result.to_dict() for result in results]
@@ -303,6 +314,9 @@ async def get_database_stats() -> dict:
     Returns:
         Database statistics and metadata
     """
+    if database is None or embedder is None:
+        return {"status": "error", "error": "Server components not initialized"}
+
     try:
         stats = database.get_stats()
 
@@ -361,7 +375,7 @@ async def health_check() -> dict:
     }
 
 
-def main():
+def main() -> None:
     """Run the MCP server"""
     logger.info("Starting USC Semantic Search MCP Server")
 

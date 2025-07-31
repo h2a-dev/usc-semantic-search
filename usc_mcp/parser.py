@@ -71,7 +71,7 @@ class USLMParser:
     USLM_NS = "http://xml.house.gov/schemas/uslm/1.0"
     DC_NS = "http://purl.org/dc/elements/1.1/"
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.namespaces = {"uslm": self.USLM_NS, "dc": self.DC_NS}
 
     def parse_file(self, filepath: Path) -> List[USCSection]:
@@ -99,7 +99,7 @@ class USLMParser:
             logger.error(f"Error parsing {filepath}: {e}")
             raise
 
-    def _extract_title_info(self, root) -> Dict[str, str]:
+    def _extract_title_info(self, root: etree.Element) -> Dict[str, str]:
         """Extract title-level metadata"""
         title_info = {}
 
@@ -121,7 +121,9 @@ class USLMParser:
 
         return title_info
 
-    def _parse_section(self, section_elem, title_info: Dict[str, str]) -> Optional[USCSection]:
+    def _parse_section(
+        self, section_elem: etree.Element, title_info: Dict[str, str]
+    ) -> Optional[USCSection]:
         """Parse a single section element"""
         try:
             section = USCSection(
@@ -181,7 +183,7 @@ class USLMParser:
             logger.error(f"Error parsing section: {e}")
             return None
 
-    def _extract_text_content(self, elem) -> str:
+    def _extract_text_content(self, elem: etree.Element) -> str:
         """Extract all text content from an element"""
         # Get the main content, excluding subsections
         content_parts = []
@@ -204,12 +206,12 @@ class USLMParser:
 
         return "\n\n".join(filter(None, content_parts))
 
-    def _extract_subsections(self, section_elem) -> List[Dict[str, str]]:
+    def _extract_subsections(self, section_elem: etree.Element) -> List[Dict[str, Any]]:
         """Extract all subsections from a section"""
         subsections = []
 
         for subsec_elem in section_elem.findall(".//uslm:subsection", self.namespaces):
-            subsection = {}
+            subsection: Dict[str, Any] = {}
 
             # Get subsection number
             num_elem = subsec_elem.find(".//uslm:num", self.namespaces)
@@ -233,7 +235,7 @@ class USLMParser:
 
         return subsections
 
-    def _extract_nested_levels(self, parent_elem) -> List[Dict[str, str]]:
+    def _extract_nested_levels(self, parent_elem: etree.Element) -> List[Dict[str, str]]:
         """Extract nested levels like paragraphs, subparagraphs, clauses"""
         nested = []
 
@@ -255,7 +257,7 @@ class USLMParser:
 
         return nested
 
-    def _extract_notes(self, section_elem) -> List[str]:
+    def _extract_notes(self, section_elem: etree.Element) -> List[str]:
         """Extract all notes from a section"""
         notes = []
 
@@ -278,7 +280,7 @@ class USLMParser:
 
         return list(set(amendments))  # Remove duplicates
 
-    def _extract_cross_references(self, elem) -> List[str]:
+    def _extract_cross_references(self, elem: etree.Element) -> List[str]:
         """Extract cross-references from an element"""
         references = []
 
@@ -290,7 +292,7 @@ class USLMParser:
 
         return references
 
-    def _get_element_text(self, elem) -> str:
+    def _get_element_text(self, elem: etree.Element) -> str:
         """Get all text from an element, including nested elements"""
         if elem is None:
             return ""
@@ -326,7 +328,7 @@ class USLMParser:
     ) -> List[Dict[str, Any]]:
         """Extract chunks from sections for embedding (legacy method)"""
         chunks = []
-        seen_ids = {}
+        seen_ids: Dict[str, int] = {}
 
         for section in sections:
             # Create base metadata
@@ -394,7 +396,7 @@ class USLMParser:
         # Create document chunks for each chapter
         documents = []
         for chapter_id, chapter_sections in chapters.items():
-            doc_chunks = []
+            doc_chunks: List[Dict[str, Any]] = []
 
             # Sort sections within chapter
             chapter_sections.sort(key=lambda s: s.section_num)
