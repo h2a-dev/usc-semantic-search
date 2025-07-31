@@ -11,9 +11,8 @@ import logging
 import zipfile
 import json
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict
 from datetime import datetime
-from urllib.parse import urljoin
 
 import httpx
 import click
@@ -146,7 +145,7 @@ class USCDownloader:
         content_type = response.headers.get("content-type", "")
         if "text/html" in content_type:
             console.print(f"[red]Warning: Got HTML response instead of zip file[/red]")
-            console.print(f"[dim]Content-Type: {content_type}[/dim]")
+            console.print("[dim]Content-Type: " + content_type + "[/dim]")
             console.print(f"[dim]Status: {response.status_code}[/dim]")
             # Check first 200 chars
             text_preview = response.text[:200]
@@ -375,12 +374,12 @@ def main(title, download_all, sample, update_catalog, list_available, force, dat
             # Write download summary
             summary_file = Path(data_dir) / "download_summary.txt"
             with open(summary_file, "w") as f:
-                f.write(f"USC Download Summary\n")
-                f.write(f"===================\n")
+                f.write("USC Download Summary\n")
+                f.write("===================\n")
                 f.write(f"Date: {datetime.now().isoformat()}\n")
                 f.write(f"Downloaded: {len(downloaded)} titles\n")
                 f.write(f"Time: {elapsed:.1f} seconds\n")
-                f.write(f"Files:\n")
+                f.write("Files:\n")
                 for filepath in downloaded:
                     f.write(f"  - {filepath.name}\n")
 

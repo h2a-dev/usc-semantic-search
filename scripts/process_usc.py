@@ -12,13 +12,13 @@ import asyncio
 from pathlib import Path
 from typing import List
 
+# Add parent directory to path
+sys.path.append(str(Path(__file__).parent.parent))
+
 import click
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from dotenv import load_dotenv
-
-# Add parent directory to path
-sys.path.append(str(Path(__file__).parent.parent))
 
 from usc_mcp.parser import USLMParser
 from usc_mcp.embedder import VoyageEmbedder

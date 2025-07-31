@@ -8,9 +8,8 @@ structured text with metadata for embedding and search.
 import re
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field
-from datetime import datetime
 
 from lxml import etree
 from bs4 import BeautifulSoup

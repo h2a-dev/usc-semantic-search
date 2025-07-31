@@ -10,15 +10,15 @@ import logging
 from pathlib import Path
 from typing import List, Optional
 
-from fastmcp import FastMCP
-from dotenv import load_dotenv
-
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
 
+from fastmcp import FastMCP
+from dotenv import load_dotenv
+
 from usc_mcp.database import ChromaDatabase
 from usc_mcp.embedder import VoyageEmbedder
-from usc_mcp.tools import USCSearchTools, SearchResult, CitationResult, BrowseResult
+from usc_mcp.tools import USCSearchTools
 
 # Load environment variables
 load_dotenv()
