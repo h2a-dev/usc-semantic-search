@@ -6,15 +6,12 @@ Manages vector storage and retrieval using ChromaDB.
 
 import os
 import logging
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any, Optional
 from pathlib import Path
 import json
-from datetime import datetime
 
 import chromadb
 from chromadb.config import Settings
-from chromadb.utils import embedding_functions
-import numpy as np
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -227,7 +224,7 @@ class ChromaDatabase:
                     if value.startswith("[") or value.startswith("{"):
                         try:
                             result["metadata"][key] = json.loads(value)
-                        except:
+                        except (json.JSONDecodeError, ValueError):
                             pass
 
                 formatted_results.append(result)
