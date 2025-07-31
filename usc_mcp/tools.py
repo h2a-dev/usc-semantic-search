@@ -232,7 +232,9 @@ class USCSearchTools:
                     "source_credit": metadata.get("source_credit", ""),
                     "effective_date": metadata.get("effective_date", ""),
                     "has_notes": metadata.get("has_notes", "false") == "true",
-                    "has_amendments": metadata.get("has_amendments", "false") == "true",
+                    "has_amendments": (
+                        metadata.get("has_amendments", "false") == "true"
+                    ),
                 },
             )
 
@@ -262,7 +264,11 @@ class USCSearchTools:
                 sections = self.database.browse_hierarchy(title_num=title_num)
                 if sections:
                     title_name = sections[0]["metadata"].get("title_name", "")
-                    items.append({"number": title_num, "name": title_name, "type": "title"})
+                    items.append({
+                        "number": title_num,
+                        "name": title_name,
+                        "type": "title"
+                    })
 
             return BrowseResult(level="titles", items=items)
 
@@ -303,7 +309,9 @@ class USCSearchTools:
 
             return BrowseResult(level="sections", items=items)
 
-    async def get_context(self, section_id: str, context_size: int = 2) -> List[CitationResult]:
+    async def get_context(
+        self, section_id: str, context_size: int = 2
+    ) -> List[CitationResult]:
         """
         Get surrounding sections for context
 
@@ -326,7 +334,9 @@ class USCSearchTools:
         if not title_num:
             return []
 
-        sections = self.database.browse_hierarchy(title_num=title_num, chapter_num=chapter_num)
+        sections = self.database.browse_hierarchy(
+            title_num=title_num, chapter_num=chapter_num
+        )
 
         # Find target index
         target_idx = None
