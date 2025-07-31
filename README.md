@@ -16,6 +16,7 @@ An MCP (Model Context Protocol) server that provides AI-powered semantic search 
 - ⚖️ **Accurate Citations**: Returns proper legal citations for all results
 - 🔄 **Reranking**: Advanced relevance scoring for better search results
 - 🏗️ **Hierarchical Browse**: Navigate USC structure (titles → chapters → sections)
+- 🧠 **Contextualized Embeddings**: NEW! Support for voyage-context-3 with document-aware embeddings
 
 ## 📸 Screenshots
 
@@ -131,9 +132,17 @@ usc-download --title 26
 usc-download --title 26 --title 42
 usc-download --all
 
-# Process and embed
+# Process and embed (standard embeddings)
 usc-process --title 26
-usc-process --all --clear  # Clear existing and process all
+
+# Process with contextualized embeddings (recommended)
+usc-process --title 26 --use-context
+
+# Process with specific chunking strategy
+usc-process --title 26 --use-context --chunk-strategy section
+
+# Process all titles with contextualized embeddings
+usc-process --all --clear --use-context
 
 # Run the server
 usc-server
@@ -181,11 +190,17 @@ cp .env.example .env
 VOYAGE_API_KEY=your_voyage_api_key_here
 ```
 
-Other configuration options:
+### Standard Configuration
 - `VOYAGE_EMBEDDING_MODEL`: Model for embeddings (default: `voyage-law-2`)
 - `CHROMA_PERSIST_DIR`: Database location (default: `./data/db`)
 - `USC_DATA_DIR`: XML storage (default: `./data/xml`)
 - `BATCH_SIZE`: Embedding batch size (default: 25)
+
+### Contextualized Embeddings (NEW!)
+- `USE_CONTEXTUALIZED_EMBEDDINGS`: Enable voyage-context-3 (default: `true`)
+- `VOYAGE_CONTEXT_MODEL`: Context model name (default: `voyage-context-3`)
+- `VOYAGE_CONTEXT_DIMENSION`: Output dimensions (256, 512, 1024, 2048) (default: 1024)
+- `CHUNK_STRATEGY`: How to group chunks (`hierarchical`, `chapter`, `section`)
 
 ## Development
 
@@ -230,10 +245,35 @@ ruff check usc_mcp scripts tests
 mypy usc_mcp
 ```
 
+## 🧠 Contextualized Embeddings
+
+This project now supports VoyageAI's cutting-edge `voyage-context-3` model, which creates embeddings that understand document context. This is particularly powerful for legal text where sections reference and build upon each other.
+
+### Why Contextualized Embeddings?
+
+Traditional embeddings treat each text chunk in isolation. Contextualized embeddings encode each chunk with awareness of surrounding chunks, resulting in:
+
+- **Better cross-reference understanding**: Sections that reference "the preceding section" maintain that context
+- **Improved subsection search**: Subsections inherit context from their parent sections
+- **Enhanced legal interpretation**: Related provisions are better connected semantically
+
+### Chunking Strategies
+
+1. **Hierarchical** (default): Smart grouping based on document size
+2. **Chapter**: Groups all sections within a chapter as one document
+3. **Section**: Each section with its subsections forms a document
+
+### Example Results
+
+Query: "home office deduction requirements"
+
+- **Standard embeddings**: May miss subsections that don't explicitly mention "home office"
+- **Contextualized embeddings**: Understands subsections in context of 26 USC 280A
+
 ## 📊 Performance
 
 - **Search Speed**: <100ms for semantic search
-- **Embedding Rate**: ~1000 sections/minute
+- **Embedding Rate**: ~1000 sections/minute (standard), ~800 sections/minute (contextualized)
 - **Storage**: ~2GB per USC title
 - **Memory**: ~2GB for server + database
 

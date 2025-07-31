@@ -325,7 +325,7 @@ class USLMParser:
         
     def extract_chunks(self, sections: List[USCSection], max_tokens: int = 1000, 
                       overlap: int = 100) -> List[Dict[str, Any]]:
-        """Extract chunks from sections for embedding"""
+        """Extract chunks from sections for embedding (legacy method)"""
         chunks = []
         seen_ids = {}
         
@@ -358,3 +358,166 @@ class USLMParser:
             chunks.append(chunk)
             
         return chunks
+    
+    def extract_contextual_chunks(self, sections: List[USCSection], 
+                                 chunk_strategy: str = "hierarchical",
+                                 max_chunk_size: int = 1000) -> List[List[Dict[str, Any]]]:
+        """
+        Extract chunks maintaining document boundaries for contextualized embeddings
+        
+        Args:
+            sections: List of USC sections to process
+            chunk_strategy: Strategy for chunking ("hierarchical", "section", "chapter")
+            max_chunk_size: Maximum size of a chunk in tokens
+            
+        Returns:
+            List of documents, each containing ordered chunks
+        """
+        if chunk_strategy == "chapter":
+            return self._chunk_by_chapter(sections, max_chunk_size)
+        elif chunk_strategy == "section":
+            return self._chunk_by_section(sections, max_chunk_size)
+        else:  # hierarchical
+            return self._chunk_hierarchically(sections, max_chunk_size)
+    
+    def _chunk_by_chapter(self, sections: List[USCSection], max_chunk_size: int) -> List[List[Dict[str, Any]]]:
+        """Group sections by chapter, treating each chapter as a document"""
+        from collections import defaultdict
+        
+        # Group sections by chapter
+        chapters = defaultdict(list)
+        for section in sections:
+            chapter_key = f"{section.title_num}-ch{section.chapter_num or 'none'}"
+            chapters[chapter_key].append(section)
+        
+        # Create document chunks for each chapter
+        documents = []
+        for chapter_id, chapter_sections in chapters.items():
+            doc_chunks = []
+            
+            # Sort sections within chapter
+            chapter_sections.sort(key=lambda s: s.section_num)
+            
+            for section in chapter_sections:
+                # Create chunk for this section
+                chunk = {
+                    'id': f"{section.title_num}-{section.section_num}",
+                    'text': section.get_full_text(),
+                    'metadata': {
+                        **section.get_metadata(),
+                        'document_id': chapter_id,
+                        'document_type': 'chapter',
+                        'position': len(doc_chunks)
+                    }
+                }
+                doc_chunks.append(chunk)
+            
+            if doc_chunks:
+                documents.append(doc_chunks)
+        
+        return documents
+    
+    def _chunk_by_section(self, sections: List[USCSection], max_chunk_size: int) -> List[List[Dict[str, Any]]]:
+        """Treat each section as a document with subsections as chunks"""
+        documents = []
+        
+        for section in sections:
+            doc_id = f"{section.title_num}-{section.section_num}"
+            doc_chunks = []
+            
+            # First chunk: section header and main text
+            header_text = f"{section.heading}\n\n{section.text}" if section.text else section.heading
+            if header_text:
+                chunk = {
+                    'id': f"{doc_id}-main",
+                    'text': header_text,
+                    'metadata': {
+                        **section.get_metadata(),
+                        'document_id': doc_id,
+                        'document_type': 'section',
+                        'chunk_type': 'main',
+                        'position': 0
+                    }
+                }
+                doc_chunks.append(chunk)
+            
+            # Add subsections as chunks
+            for i, subsection in enumerate(section.subsections):
+                subsec_text = f"{subsection.get('num', '')} {subsection.get('heading', '')}\n{subsection.get('text', '')}"
+                chunk = {
+                    'id': f"{doc_id}-sub{i+1}",
+                    'text': subsec_text.strip(),
+                    'metadata': {
+                        **section.get_metadata(),
+                        'document_id': doc_id,
+                        'document_type': 'section',
+                        'chunk_type': 'subsection',
+                        'subsection_num': subsection.get('num', ''),
+                        'position': i + 1
+                    }
+                }
+                doc_chunks.append(chunk)
+            
+            # Add notes as final chunk if present
+            if section.notes:
+                notes_text = "\n\n".join(section.notes)
+                chunk = {
+                    'id': f"{doc_id}-notes",
+                    'text': f"Notes:\n{notes_text}",
+                    'metadata': {
+                        **section.get_metadata(),
+                        'document_id': doc_id,
+                        'document_type': 'section',
+                        'chunk_type': 'notes',
+                        'position': len(doc_chunks)
+                    }
+                }
+                doc_chunks.append(chunk)
+            
+            if doc_chunks:
+                documents.append(doc_chunks)
+        
+        return documents
+    
+    def _chunk_hierarchically(self, sections: List[USCSection], max_chunk_size: int) -> List[List[Dict[str, Any]]]:
+        """
+        Hybrid approach: Use chapter grouping for small chapters, 
+        section grouping for large sections
+        """
+        from collections import defaultdict
+        
+        # First, analyze the data
+        chapters = defaultdict(list)
+        for section in sections:
+            chapter_key = f"{section.title_num}-ch{section.chapter_num or 'none'}"
+            chapters[chapter_key].append(section)
+        
+        documents = []
+        
+        for chapter_id, chapter_sections in chapters.items():
+            # Estimate chapter size
+            chapter_size = sum(len(s.get_full_text()) for s in chapter_sections)
+            
+            # If chapter is small enough, treat as single document
+            if chapter_size < max_chunk_size * 10:  # Arbitrary threshold
+                doc_chunks = []
+                for i, section in enumerate(sorted(chapter_sections, key=lambda s: s.section_num)):
+                    chunk = {
+                        'id': f"{section.title_num}-{section.section_num}",
+                        'text': section.get_full_text(),
+                        'metadata': {
+                            **section.get_metadata(),
+                            'document_id': chapter_id,
+                            'document_type': 'chapter',
+                            'position': i
+                        }
+                    }
+                    doc_chunks.append(chunk)
+                if doc_chunks:
+                    documents.append(doc_chunks)
+            else:
+                # For large chapters, use section-level documents
+                section_docs = self._chunk_by_section(chapter_sections, max_chunk_size)
+                documents.extend(section_docs)
+        
+        return documents

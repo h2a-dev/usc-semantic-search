@@ -28,35 +28,57 @@ class EmbeddingResult:
     metadata: Dict[str, Any]
     token_count: int
 
+@dataclass
+class ContextualizedEmbeddingResult:
+    """Result of contextualized embedding operation"""
+    document_id: str
+    chunk_embeddings: List[EmbeddingResult]
+    total_tokens: int
+
 class VoyageEmbedder:
     """Handles embedding generation using VoyageAI"""
     
     def __init__(self, 
                  api_key: Optional[str] = None,
                  embedding_model: str = "voyage-law-2",
+                 context_model: str = "voyage-context-3",
                  rerank_model: str = "rerank-2",
-                 batch_size: int = 25):
+                 batch_size: int = 25,
+                 use_contextualized: bool = True,
+                 context_dimension: int = 1024):
         """
         Initialize VoyageAI embedder
         
         Args:
             api_key: VoyageAI API key (defaults to env var)
-            embedding_model: Model to use for embeddings
+            embedding_model: Model to use for standard embeddings
+            context_model: Model to use for contextualized embeddings
             rerank_model: Model to use for reranking
             batch_size: Number of texts to embed at once
+            use_contextualized: Whether to use contextualized embeddings
+            context_dimension: Output dimension for context embeddings (256, 512, 1024, 2048)
         """
         self.api_key = api_key or os.getenv("VOYAGE_API_KEY")
         if not self.api_key:
             raise ValueError("VoyageAI API key not found. Set VOYAGE_API_KEY environment variable.")
             
         self.embedding_model = embedding_model
+        self.context_model = context_model
         self.rerank_model = rerank_model
         self.batch_size = batch_size
+        self.use_contextualized = use_contextualized
+        self.context_dimension = context_dimension
         
         # Initialize client
         self.client = voyageai.Client(api_key=self.api_key)
         
-        logger.info(f"Initialized VoyageAI embedder with model: {embedding_model}")
+        # Get config from environment with defaults
+        self.use_contextualized = os.getenv("USE_CONTEXTUALIZED_EMBEDDINGS", str(use_contextualized)).lower() == "true"
+        self.context_model = os.getenv("VOYAGE_CONTEXT_MODEL", context_model)
+        self.context_dimension = int(os.getenv("VOYAGE_CONTEXT_DIMENSION", str(context_dimension)))
+        
+        active_model = self.context_model if self.use_contextualized else self.embedding_model
+        logger.info(f"Initialized VoyageAI embedder with model: {active_model} (contextualized: {self.use_contextualized})")
         
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     def embed_texts(self, texts: List[str], input_type: str = "document") -> Any:
@@ -137,8 +159,16 @@ class VoyageEmbedder:
         Returns:
             Query embedding vector
         """
-        result = self.embed_texts([query], input_type="query")
-        return result.embeddings[0]
+        if self.use_contextualized:
+            # For contextualized embeddings, queries are single-element lists
+            result = self.contextualized_embed(
+                inputs=[[query]], 
+                input_type="query"
+            )
+            return result.results[0].embeddings[0]
+        else:
+            result = self.embed_texts([query], input_type="query")
+            return result.embeddings[0]
         
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     def rerank_results(self, query: str, documents: List[str], 
@@ -173,6 +203,30 @@ class VoyageEmbedder:
         VoyageAI embeddings are normalized, so dot product = cosine similarity
         """
         return sum(a * b for a, b in zip(embedding1, embedding2))
+        
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
+    def contextualized_embed(self, inputs: List[List[str]], input_type: str = "document") -> Any:
+        """
+        Create contextualized embeddings where chunks encode context from other chunks
+        
+        Args:
+            inputs: List of documents, where each document is a list of chunks
+            input_type: Type of input ("document" or "query")
+            
+        Returns:
+            ContextualizedEmbeddingsObject with embeddings preserving document context
+        """
+        try:
+            result = self.client.contextualized_embed(
+                inputs=inputs,
+                model=self.context_model,
+                input_type=input_type,
+                output_dimension=self.context_dimension
+            )
+            return result
+        except Exception as e:
+            logger.error(f"Error creating contextualized embeddings: {e}")
+            raise
         
     async def embed_chunks_async(self, chunks: List[Dict[str, Any]], 
                                 max_concurrent: int = 5) -> List[EmbeddingResult]:
@@ -227,6 +281,78 @@ class VoyageEmbedder:
             
         return results
         
+    def embed_document_chunks(self, document_chunks: List[List[Dict[str, Any]]], 
+                             show_progress: bool = True) -> List[ContextualizedEmbeddingResult]:
+        """
+        Embed documents with their chunks using contextualized embeddings
+        
+        Args:
+            document_chunks: List of documents, each containing list of chunks
+            show_progress: Whether to show progress bar
+            
+        Returns:
+            List of ContextualizedEmbeddingResult objects
+        """
+        if not self.use_contextualized:
+            # Fallback to standard embeddings if contextualized is disabled
+            all_results = []
+            for doc_chunks in document_chunks:
+                results = self.embed_chunks(doc_chunks, show_progress=False)
+                all_results.extend(results)
+            return all_results
+            
+        results = []
+        total_tokens = 0
+        
+        # Process each document
+        iterator = tqdm(document_chunks, desc="Processing documents") if show_progress else document_chunks
+        
+        for doc_idx, doc_chunks in enumerate(iterator):
+            # Extract texts for this document
+            chunk_texts = [chunk['text'] for chunk in doc_chunks]
+            
+            # Skip empty documents
+            if not chunk_texts:
+                continue
+                
+            # Create contextualized embeddings for this document
+            embeddings_obj = self.contextualized_embed(
+                inputs=[chunk_texts],  # Single document with multiple chunks
+                input_type="document"
+            )
+            
+            # Process results
+            if embeddings_obj.results:
+                result = embeddings_obj.results[0]
+                doc_id = doc_chunks[0].get('metadata', {}).get('document_id', f'doc_{doc_idx}')
+                
+                # Create embedding results for each chunk
+                chunk_embeddings = []
+                for i, (chunk, embedding) in enumerate(zip(doc_chunks, result.embeddings)):
+                    emb_result = EmbeddingResult(
+                        chunk_id=chunk['id'],
+                        embedding=embedding,
+                        metadata=chunk['metadata'],
+                        token_count=len(chunk['text'].split()) * 2  # Rough estimate
+                    )
+                    chunk_embeddings.append(emb_result)
+                
+                # Create contextualized result
+                ctx_result = ContextualizedEmbeddingResult(
+                    document_id=doc_id,
+                    chunk_embeddings=chunk_embeddings,
+                    total_tokens=embeddings_obj.total_tokens
+                )
+                results.append(ctx_result)
+                total_tokens += embeddings_obj.total_tokens
+                
+            # Rate limiting pause
+            if len(document_chunks) > 1:
+                time.sleep(0.5)
+                
+        logger.info(f"Generated contextualized embeddings for {len(results)} documents using {total_tokens} tokens")
+        return results
+    
     def estimate_cost(self, num_chunks: int, avg_chunk_size: int = 500) -> Dict[str, float]:
         """
         Estimate embedding costs
@@ -241,12 +367,19 @@ class VoyageEmbedder:
         total_tokens = num_chunks * avg_chunk_size
         
         # VoyageAI pricing (approximate - check current rates)
-        embedding_rate = 0.00012  # per 1K tokens for voyage-law-2
+        if self.use_contextualized:
+            embedding_rate = 0.00012  # per 1K tokens for voyage-context-3
+            model_name = self.context_model
+        else:
+            embedding_rate = 0.00012  # per 1K tokens for voyage-law-2
+            model_name = self.embedding_model
         
         embedding_cost = (total_tokens / 1000) * embedding_rate
         
         return {
+            'model': model_name,
             'total_tokens': total_tokens,
             'embedding_cost': embedding_cost,
-            'total_cost': embedding_cost
+            'total_cost': embedding_cost,
+            'contextualized': self.use_contextualized
         }

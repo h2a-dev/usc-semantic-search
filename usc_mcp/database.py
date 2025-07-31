@@ -147,6 +147,39 @@ class ChromaDatabase:
         
         logger.info(f"Added {len(ids)} embeddings to database")
         return len(ids)
+    
+    def add_contextualized_embeddings(self, embedding_results: List[Any]) -> int:
+        """
+        Add contextualized embeddings to the database
+        
+        Args:
+            embedding_results: List of ContextualizedEmbeddingResult objects
+            
+        Returns:
+            Number of embeddings added
+        """
+        if not embedding_results:
+            return 0
+            
+        total_added = 0
+        
+        # Process each document's embeddings
+        for ctx_result in embedding_results:
+            # For contextualized embeddings, we store the chunk embeddings
+            # but preserve the document relationship in metadata
+            chunk_results = ctx_result.chunk_embeddings
+            
+            # Add document ID to each chunk's metadata
+            for chunk_result in chunk_results:
+                if 'document_id' not in chunk_result.metadata:
+                    chunk_result.metadata['document_id'] = ctx_result.document_id
+            
+            # Use the standard add_embeddings method
+            added = self.add_embeddings(chunk_results)
+            total_added += added
+            
+        logger.info(f"Added {total_added} contextualized embeddings from {len(embedding_results)} documents")
+        return total_added
         
     def search(self, 
                query_embedding: List[float], 
@@ -311,6 +344,8 @@ class ChromaDatabase:
             
             titles = set()
             chapters = set()
+            documents = set()
+            embedding_type = "unknown"
             
             if sample['metadatas']:
                 for metadata in sample['metadatas']:
@@ -318,14 +353,21 @@ class ChromaDatabase:
                         titles.add(metadata['title_num'])
                     if 'chapter_num' in metadata and metadata['chapter_num']:
                         chapters.add(f"{metadata['title_num']}-{metadata['chapter_num']}")
+                    if 'document_id' in metadata:
+                        documents.add(metadata['document_id'])
+                        embedding_type = "contextualized"
+                    elif embedding_type == "unknown":
+                        embedding_type = "standard"
                         
             return {
                 'total_sections': count,
                 'unique_titles': len(titles),
                 'unique_chapters': len(chapters),
+                'unique_documents': len(documents),
                 'titles': sorted(list(titles)),
                 'database_path': self.persist_dir,
-                'collection_name': self.collection_name
+                'collection_name': self.collection_name,
+                'embedding_type': embedding_type
             }
         except Exception as e:
             logger.warning(f"Error getting stats: {e}")
@@ -333,9 +375,11 @@ class ChromaDatabase:
                 'total_sections': 0,
                 'unique_titles': 0,
                 'unique_chapters': 0,
+                'unique_documents': 0,
                 'titles': [],
                 'database_path': self.persist_dir,
-                'collection_name': self.collection_name
+                'collection_name': self.collection_name,
+                'embedding_type': 'unknown'
             }
         
     def clear_collection(self):

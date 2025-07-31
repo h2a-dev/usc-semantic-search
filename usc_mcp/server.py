@@ -312,12 +312,29 @@ async def get_database_stats() -> dict:
     """
     try:
         stats = database.get_stats()
+        
+        # Determine active embedding model
+        if embedder.use_contextualized:
+            active_model = embedder.context_model
+            embedding_type = "contextualized"
+        else:
+            active_model = embedder.embedding_model
+            embedding_type = "standard"
+            
         return {
             "status": "online",
             "statistics": stats,
-            "embedding_model": embedder.embedding_model,
+            "embedding_configuration": {
+                "active_model": active_model,
+                "embedding_type": embedding_type,
+                "standard_model": embedder.embedding_model,
+                "context_model": embedder.context_model,
+                "context_dimension": embedder.context_dimension if embedder.use_contextualized else None,
+                "use_contextualized": embedder.use_contextualized
+            },
             "features": {
                 "semantic_search": True,
+                "contextualized_embeddings": embedder.use_contextualized,
                 "reranking": True,
                 "hierarchical_browse": True,
                 "citation_lookup": True
