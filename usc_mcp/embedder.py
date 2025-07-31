@@ -96,7 +96,8 @@ class VoyageEmbedder:
 
         active_model = self.context_model if self.use_contextualized else self.embedding_model
         logger.info(
-            f"Initialized VoyageAI embedder with model: {active_model} (contextualized: {self.use_contextualized})"
+            f"Initialized VoyageAI embedder with model: {active_model} "
+            f"(contextualized: {self.use_contextualized})"
         )
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
@@ -312,7 +313,8 @@ class VoyageEmbedder:
             # Skip chunks that are too large on their own
             if chunk_tokens > safe_limit:
                 logger.warning(
-                    f"Chunk exceeds safe limit ({chunk_tokens} > {safe_limit}), skipping: {chunk['id']}"
+                    f"Chunk exceeds safe limit ({chunk_tokens} > {safe_limit}), "
+                    f"skipping: {chunk['id']}"
                 )
                 continue
 
@@ -379,9 +381,12 @@ class VoyageEmbedder:
 
                 # Process each sub-document
                 for sub_idx, subdoc_chunks in enumerate(sub_documents):
+                    doc_id_base = doc_chunks[0].get('metadata', {}).get(
+                        'document_id', f'doc_{doc_idx}'
+                    )
                     sub_result = self._process_single_document(
                         subdoc_chunks,
-                        f"{doc_chunks[0].get('metadata', {}).get('document_id', f'doc_{doc_idx}')}_{sub_idx}",
+                        f"{doc_id_base}_{sub_idx}",
                     )
                     if sub_result:
                         results.append(sub_result)
@@ -397,7 +402,8 @@ class VoyageEmbedder:
                     total_tokens += result.total_tokens
 
         logger.info(
-            f"Generated contextualized embeddings for {len(results)} documents using {total_tokens} tokens"
+            f"Generated contextualized embeddings for {len(results)} documents "
+            f"using {total_tokens} tokens"
         )
         return results
 
@@ -416,12 +422,14 @@ class VoyageEmbedder:
         # Debug: check total tokens
         total_tokens = sum(self.count_tokens(text) for text in chunk_texts)
         logger.debug(
-            f"Processing document {doc_id} with {len(chunk_texts)} chunks, {total_tokens} total tokens"
+            f"Processing document {doc_id} with {len(chunk_texts)} chunks, "
+            f"{total_tokens} total tokens"
         )
 
         if total_tokens > self.max_context_tokens:
             logger.error(
-                f"Document {doc_id} still exceeds token limit after splitting: {total_tokens} tokens"
+                f"Document {doc_id} still exceeds token limit after splitting: "
+                f"{total_tokens} tokens"
             )
             return None
 
