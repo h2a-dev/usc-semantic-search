@@ -112,7 +112,8 @@ class USCProcessor:
                             total_chunks += 1
                         else:
                             console.print(
-                                f"[yellow]Skipping empty chunk: {chunk.get('id', 'unknown')}[/yellow]"
+                                f"[yellow]Skipping empty chunk: "
+                                f"{chunk.get('id', 'unknown')}[/yellow]"
                             )
                     if filtered_doc:  # Only keep documents with at least one chunk
                         filtered_documents.append(filtered_doc)
@@ -121,7 +122,8 @@ class USCProcessor:
                 progress.update(task, completed=True)
 
                 console.print(
-                    f"[green]Created {len(document_chunks)} documents with {total_chunks} total chunks[/green]"
+                    f"[green]Created {len(document_chunks)} documents "
+                    f"with {total_chunks} total chunks[/green]"
                 )
 
                 if not document_chunks:
@@ -139,7 +141,9 @@ class USCProcessor:
                 )
                 cost_estimate = self.embedder.estimate_cost(total_chunks, avg_chunk_size)
                 console.print(
-                    f"[yellow]Estimated embedding cost: ${cost_estimate['embedding_cost']:.4f} using {cost_estimate['model']}[/yellow]"
+                    f"[yellow]Estimated embedding cost: "
+                    f"${cost_estimate['embedding_cost']:.4f} "
+                    f"using {cost_estimate['model']}[/yellow]"
                 )
 
                 # Generate contextualized embeddings
@@ -193,7 +197,9 @@ class USCProcessor:
                 )
                 cost_estimate = self.embedder.estimate_cost(len(chunks), avg_chunk_size)
                 console.print(
-                    f"[yellow]Estimated embedding cost: ${cost_estimate['embedding_cost']:.4f} using {cost_estimate['model']}[/yellow]"
+                    f"[yellow]Estimated embedding cost: "
+                    f"${cost_estimate['embedding_cost']:.4f} "
+                    f"using {cost_estimate['model']}[/yellow]"
                 )
 
                 # Generate embeddings
@@ -281,9 +287,12 @@ def main(title, process_all, clear, data_dir, use_context, chunk_strategy):
 
     # Show configuration
     console.print("\n[bold]Configuration:[/bold]")
-    console.print(
-        f"Embedding mode: {'Contextualized (voyage-context-3)' if processor.use_contextualized else 'Standard (voyage-law-2)'}"
+    mode = (
+        "Contextualized (voyage-context-3)"
+        if processor.use_contextualized
+        else "Standard (voyage-law-2)"
     )
+    console.print(f"Embedding mode: {mode}")
     if processor.use_contextualized:
         console.print(f"Chunk strategy: {processor.chunk_strategy}")
 
