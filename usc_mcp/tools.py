@@ -223,7 +223,10 @@ class USCSearchTools:
 
             return CitationResult(
                 citation=metadata.get("full_citation", citation),
-                title=f"Title {metadata.get('title_num', '')} - {metadata.get('title_name', '')}",
+                title=(
+                    f"Title {metadata.get('title_num', '')} - "
+                    f"{metadata.get('title_name', '')}"
+                ),
                 section_name=metadata.get("section_name", ""),
                 full_text=full_text,
                 metadata={
@@ -309,7 +312,9 @@ class USCSearchTools:
 
             return BrowseResult(level="sections", items=items)
 
-    async def get_context(self, section_id: str, context_size: int = 2) -> List[CitationResult]:
+    async def get_context(
+        self, section_id: str, context_size: int = 2
+    ) -> List[CitationResult]:
         """
         Get surrounding sections for context
 
@@ -332,7 +337,9 @@ class USCSearchTools:
         if not title_num:
             return []
 
-        sections = self.database.browse_hierarchy(title_num=title_num, chapter_num=chapter_num)
+        sections = self.database.browse_hierarchy(
+            title_num=title_num, chapter_num=chapter_num
+        )
 
         # Find target index
         target_idx = None
