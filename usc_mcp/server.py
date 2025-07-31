@@ -74,7 +74,8 @@ else:
     tools = None
 
 logger.info(
-    f"Initialization complete. Database: {database is not None}, Embedder: {embedder is not None}, Tools: {tools is not None}"
+    f"Initialization complete. Database: {database is not None}, "
+    f"Embedder: {embedder is not None}, Tools: {tools is not None}"
 )
 
 
@@ -370,7 +371,8 @@ def main():
         try:
             stats = database.get_stats()
             logger.info(
-                f"Database contains {stats['total_sections']} sections from {stats['unique_titles']} titles"
+                f"Database contains {stats['total_sections']} sections "
+                f"from {stats['unique_titles']} titles"
             )
         except Exception as e:
             logger.warning(f"Could not get database stats: {e}")

@@ -466,7 +466,10 @@ class USLMParser:
 
             # Add subsections as chunks
             for i, subsection in enumerate(section.subsections):
-                subsec_text = f"{subsection.get('num', '')} {subsection.get('heading', '')}\n{subsection.get('text', '')}"
+                subsec_text = (
+                    f"{subsection.get('num', '')} {subsection.get('heading', '')}\n"
+                    f"{subsection.get('text', '')}"
+                )
                 chunk = {
                     "id": f"{doc_id}-sub{i+1}",
                     "text": subsec_text.strip(),
