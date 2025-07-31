@@ -47,7 +47,7 @@ class VoyageEmbedder:
                  batch_size: int = 25,
                  use_contextualized: bool = True,
                  context_dimension: int = 1024,
-                 max_context_tokens: int = 30000):
+                 max_context_tokens: int = 20000):  # Reduced from 30k to 20k for safety
         """
         Initialize VoyageAI embedder
         
@@ -70,7 +70,7 @@ class VoyageEmbedder:
         self.batch_size = batch_size
         self.use_contextualized = use_contextualized
         self.context_dimension = context_dimension
-        self.max_context_tokens = max_context_tokens  # Leave buffer for voyage-context-3's 32k limit
+        self.max_context_tokens = int(os.getenv("MAX_CONTEXT_TOKENS", max_context_tokens))  # Leave buffer for voyage-context-3's 32k limit
         
         # Initialize tokenizer for token counting
         self.tokenizer = tiktoken.get_encoding("cl100k_base")
@@ -305,11 +305,19 @@ class VoyageEmbedder:
         current_subdoc = []
         current_tokens = 0
         
+        # Use 80% of max tokens to leave buffer for VoyageAI's own overhead
+        safe_limit = int(self.max_context_tokens * 0.8)
+        
         for chunk in doc_chunks:
             chunk_tokens = self.count_tokens(chunk['text'])
             
+            # Skip chunks that are too large on their own
+            if chunk_tokens > safe_limit:
+                logger.warning(f"Chunk exceeds safe limit ({chunk_tokens} > {safe_limit}), skipping: {chunk['id']}")
+                continue
+            
             # If adding this chunk would exceed limit, start new sub-document
-            if current_subdoc and current_tokens + chunk_tokens > self.max_context_tokens:
+            if current_subdoc and current_tokens + chunk_tokens > safe_limit:
                 sub_documents.append(current_subdoc)
                 current_subdoc = [chunk]
                 current_tokens = chunk_tokens
@@ -360,7 +368,9 @@ class VoyageEmbedder:
             
             if doc_tokens > self.max_context_tokens:
                 logger.warning(f"Document {doc_idx} has {doc_tokens} tokens, splitting into sub-documents")
+                logger.debug(f"Document has {len(doc_chunks)} chunks")
                 sub_documents = self.split_large_document(doc_chunks)
+                logger.info(f"Split into {len(sub_documents)} sub-documents")
                 
                 # Process each sub-document
                 for sub_idx, subdoc_chunks in enumerate(sub_documents):
@@ -392,6 +402,14 @@ class VoyageEmbedder:
         chunk_texts = [chunk['text'] for chunk in doc_chunks]
         
         if not chunk_texts:
+            return None
+        
+        # Debug: check total tokens
+        total_tokens = sum(self.count_tokens(text) for text in chunk_texts)
+        logger.debug(f"Processing document {doc_id} with {len(chunk_texts)} chunks, {total_tokens} total tokens")
+        
+        if total_tokens > self.max_context_tokens:
+            logger.error(f"Document {doc_id} still exceeds token limit after splitting: {total_tokens} tokens")
             return None
             
         try:
