@@ -20,6 +20,10 @@ An MCP (Model Context Protocol) server that provides AI-powered semantic search 
 
 ## 📸 Screenshots
 
+### Demo Video
+
+[![USC Semantic Search Demo](https://img.youtube.com/vi/G77DziLK4cU/0.jpg)](https://youtu.be/G77DziLK4cU?si=oSOBFDOHC2D4RYJg)
+
 <details>
 <summary>Click to see example usage</summary>
 
@@ -322,4 +326,4 @@ For more help, please [open an issue](https://github.com/h2a-dev/usc-semantic-se
 
 ---
 
-Made with ❤️ by the USC Semantic Search team
+Made with ❤️ by the H2A.DEV team
