@@ -13,36 +13,39 @@ from usc_mcp.database import ChromaDatabase
 from usc_mcp.embedder import VoyageEmbedder
 from usc_mcp.tools import USCSearchTools
 
+
 async def test_server():
     """Test basic server functionality"""
     print("Testing USC MCP Server Components...")
-    
+
     # Initialize components
     print("\n1. Initializing components...")
     try:
         database = ChromaDatabase()
         print("✓ Database initialized")
-        
+
         embedder = VoyageEmbedder()
         print("✓ Embedder initialized")
-        
+
         tools = USCSearchTools(database, embedder)
         print("✓ Tools initialized")
     except Exception as e:
         print(f"✗ Error initializing components: {e}")
         return
-        
+
     # Check database stats
     print("\n2. Checking database...")
     try:
         stats = database.get_stats()
         print(f"✓ Database contains {stats['total_sections']} sections")
-        print(f"  Titles: {', '.join(stats['titles'][:5])}{'...' if len(stats['titles']) > 5 else ''}")
+        print(
+            f"  Titles: {', '.join(stats['titles'][:5])}{'...' if len(stats['titles']) > 5 else ''}"
+        )
     except Exception as e:
         print(f"✗ Error checking database: {e}")
-        
+
     # Test search (if database has content)
-    if stats['total_sections'] > 0:
+    if stats["total_sections"] > 0:
         print("\n3. Testing search...")
         try:
             results = await tools.search_usc("tax deduction", limit=3, rerank=False)
@@ -51,7 +54,7 @@ async def test_server():
                 print(f"  {i+1}. {result.citation}: {result.section_name}")
         except Exception as e:
             print(f"✗ Error testing search: {e}")
-            
+
         # Test citation lookup
         print("\n4. Testing citation lookup...")
         try:
@@ -68,12 +71,14 @@ async def test_server():
             print(f"✗ Error testing citation lookup: {e}")
     else:
         print("\n⚠ Database is empty. Run process_usc.py first to add content.")
-        
+
     print("\n✓ Test complete!")
+
 
 def main():
     """Main entry point for testing"""
     asyncio.run(test_server())
+
 
 if __name__ == "__main__":
     main()
