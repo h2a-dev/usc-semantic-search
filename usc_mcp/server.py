@@ -12,7 +12,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 import logging  # noqa: E402
-from typing import List, Optional, Any  # noqa: E402
+from typing import List, Optional  # noqa: E402
 
 from fastmcp import FastMCP  # noqa: E402
 from dotenv import load_dotenv  # noqa: E402
